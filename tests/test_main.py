@@ -64,3 +64,16 @@ def test_aggregate_min_rating():
 def test_aggregate_max_rating():
     result = aggregate(sample_data, "rating", "max")
     assert result == 4.9
+
+def test_aggregate_column_not_found():
+    with pytest.raises(ValueError, match="Колонка 'weight' не найдена"):
+        aggregate(sample_data, "weight", "avg")
+
+def test_aggregate_invalid_data():
+    no_data = [{"brand":"apple"}, {"brand":"samsung"}]
+    with pytest.raises(ValueError,match="Нет данных для агрегации"):
+        aggregate(no_data, "brand", "avg")
+
+def test_aggregate_unsupported_operator():
+    with pytest.raises(ValueError, match="Операция 'sum' не поддерживается"):
+        aggregate(sample_data, "price", "sum")
