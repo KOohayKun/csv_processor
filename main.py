@@ -6,6 +6,7 @@ from csv_processor.proccesor import filter_data, aggregate
 
 def read_args():
     parser = argparse.ArgumentParser()
+    parser.add_argument("filepath", help="Путь к CSV файлу")
     parser.add_argument("--where")
     parser.add_argument("--aggregate")
     return parser.parse_args()
@@ -27,15 +28,16 @@ def split_aggregate_arg(aggregate_str):
 
 if __name__ == '__main__':
     args = read_args()
-    data = read_csv_file("sample.csv")
+    data = read_csv_file(args.filepath)
 
     if args.where:
         header, op, value = split_where_arg(args.where)
-        data = filter_data(data,header,op,value)
+        data = filter_data(data, header, op, value)
 
     if args.aggregate:
         column, agg_op = split_aggregate_arg(args.aggregate)
         result = aggregate(data, column, agg_op)
+        print_table(data)
         print(f"{agg_op} по колонке {column}: {result}")
     else:
         print_table(data)
