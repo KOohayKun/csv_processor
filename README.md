@@ -1,29 +1,74 @@
 # CSV Processor
 
-Скрипт для фильтрации и агрегации данных из CSV-файла.
+Скрипт для обработки CSV-файла с поддержкой фильтрации и агрегации по одной колонке.
 
-## Использование
-
-Примеры запуска:
+## 📦 Установка зависимостей
 
 ```bash
-python main.py sample.csv --where brand=xiaomi
-python main.py sample.csv --where price>500
-python main.py sample.csv --aggregate price=avg
-python main.py sample.csv --where brand=xiaomi --aggregate rating=max
+pip install -r requirements.txt
+```
 
-Пример CSV
+## 🚀 Примеры запуска
 
+Файл `sample.csv`:
+```csv
 name,brand,price,rating
 iphone 15 pro,apple,999,4.9
 galaxy s23 ultra,samsung,1199,4.8
 redmi note 12,xiaomi,199,4.6
 poco x5 pro,xiaomi,299,4.4
+```
 
-Установка
+### 🔍 Фильтрация
 
-pip install -r requirements.txt
+```bash
+python -m csv_processor.main csv_processor/sample.csv --where brand=xiaomi
+```
 
-Тесты
+Вывод:
+```
+| name          | brand  | price | rating |
+|---------------|--------|-------|--------|
+| redmi note 12 | xiaomi |   199 |    4.6 |
+| poco x5 pro   | xiaomi |   299 |    4.4 |
+```
 
-pytest
+### 📊 Агрегация
+
+```bash
+python -m csv_processor.main csv_processor/sample.csv --aggregate price=avg
+```
+
+Вывод:
+```
+| name              | brand   | price | rating |
+|-------------------|---------|-------|--------|
+| iphone 15 pro     | apple   |   999 |    4.9 |
+| galaxy s23 ultra  | samsung |  1199 |    4.8 |
+| redmi note 12     | xiaomi  |   199 |    4.6 |
+| poco x5 pro       | xiaomi  |   299 |    4.4 |
+
+avg по колонке price: 674.0
+```
+
+### 🔀 Фильтрация + агрегация
+
+```bash
+python -m csv_processor.main csv_processor/sample.csv --where brand=xiaomi --aggregate rating=max
+```
+
+Вывод:
+```
+| name          | brand  | price | rating |
+|---------------|--------|-------|--------|
+| redmi note 12 | xiaomi |   199 |    4.6 |
+| poco x5 pro   | xiaomi |   299 |    4.4 |
+
+max по колонке rating: 4.6
+```
+
+## ✅ Тестирование
+
+```bash
+pytest --cov=csv_processor
+```
